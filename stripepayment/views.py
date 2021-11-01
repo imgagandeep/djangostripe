@@ -104,7 +104,7 @@ def stripe_webhook(request):
             subject = "Here is your product",
             message = f"Thanks for your purchase",
             recipient_list = [customer_email],
-            from_email = "gagandeep.dev01@gmail.com"
+            from_email = ""
         )
     
     return HttpResponse(status=200)
