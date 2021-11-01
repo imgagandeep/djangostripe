@@ -1,0 +1,50 @@
+.container {
+    max-width: 1920px !important;
+    margin: 0% auto !important;
+    width: 100% !important;
+}
+
+.col {
+    margin: 3% 5% 1% 5% !important;
+    /* max-width: 40% !important; */
+}
+
+.col_margin {
+    margin: 3% 4% 1% 4% !important;
+}
+
+/* Price */
+#price {
+    color: #c65039;
+    font-size: 20px;
+}
+
+/* Buy Now */
+#checkout-button {
+    width: 20%;
+}
+
+#buy-button {
+    width: 40%;
+    margin-left: 60%;
+}
+
+/* Card Body */
+.cardbody {
+    padding: 1rem 2rem !important;
+}
+
+.footer-bottom-text {
+    text-align: center;
+    background: #000;
+    line-height: 75px;
+    margin: 0%;
+    width: 100% !important;
+}
+
+
+.card {
+    height: 100% !important;
+}
+
+

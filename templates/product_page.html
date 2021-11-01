@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Stripe Payment | Error</title>
+    <link rel="stripe icon" href="{% static 'images/error.svg' %}" type="image/x-icon">
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+    <link rel='stylesheet' type='text/css' media='screen' href="{% static 'css/product_page.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-kQtW33rZJAHjgefvhyyzcGF3C5TFyBQBA13V1RKPf4uH+bwyzQxZ6CmMZHmNBEfJ" crossorigin="anonymous"></script>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Nav Bar -->
+        <div class="row">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <div class="container-fluid">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav mr-auto justify-content-center">
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="/">Home</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        {% csrf_token %}
+        <div class="row">
+            <div class="col">
+                <div class="card mb-4">
+                    <div class="row g-0">
+                        <div class="col-md-3">
+                            <img src="/media/{{all_products.prod_image}}" class="card-img">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body cardbody">
+                                <h5 class="card-title">{{all_products.name}}</h5>
+                                <p class="card-text">{{all_products.description}}</p>
+                                <div id="price" class="my-3">
+                                    <label for="price"><b>Price: ₹{{all_products.price}}</b></label>
+                                </div>
+                                <div id="buy_now" class="my-3">
+                                    <!-- <input type="text" class="form-control mb-2" id="prod_id" value="{{all_products.id}}"> -->
+                                    <button type="button" class="btn btn-warning" id="checkout-button">Checkout</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="row mt-5" style="margin-top: 11% !important;">
+            <p class="footer-bottom-text">All Right reserved by &copy;Error 2021.</p>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    // Create an instance of the Stripe object with your publishable API key
+    var stripe = Stripe("{{ KEY }}");
+    var checkoutButton = document.getElementById("checkout-button");
+    checkoutButton.addEventListener("click", function () {
+        fetch("{% url 'create-checkout-session' all_products.id %}", {
+            method: "POST",
+            headers: {
+                'X-CSRFToken': csrftoken
+            }
+        }).then(function (response) {
+            return response.json();
+        }).then(function (session) {
+            return stripe.redirectToCheckout({ sessionId: session.id });
+        }).then(function (result) {
+            // If redirectToCheckout fails due to a browser or network
+            // error, you should display the localized error message to your
+            // customer using error.message.
+            if (result.error) {
+                alert(result.error.message);
+            }
+        }).catch(function (error) {
+            console.error("Error:", error);
+        });
+    });
+</script>
+</html>
